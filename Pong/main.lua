@@ -5,6 +5,23 @@
 -- Game 1 => "Pong"
 -- Made by Ruta Jankauskaite, following the tutorial
 
+--[[ Assignment 0: Implement a basic AI for either Player 1 or 2 (or both!)
+	Implement an AI-controlled paddle (either the left or the right will do) such that
+	it will try to deflect the ball at all times.
+	
+	What's done:
+	1. In the Start state, game mode selection is now present (1 Player and 2 Players)
+	   The selection is using 'w', 's' or 'up', 'down' keys.
+	2. AI:
+		The AI starts moving when the ball enters its side of the board.
+		It moves half the size of the player's paddle speed.
+	3. From Done state, now it is possible to go back to the Start state, so that it
+	   would be possible to switch the game mode without exiting and re-opening
+	   the game.
+	4. Paddles' reset is implemented, so that the Paddles' position would be reset
+	   after re-entering the Start state.
+]]
+
 
 -- library imports
 push = require 'push'
@@ -63,8 +80,10 @@ function love.load()
 	
 	-- Game state
 	gameState = 'start'
+	
+	-- Game mode, single player or multiplayer
+	gameMode = 1
 end
-
 
 
 
@@ -94,7 +113,25 @@ function love.keypressed(key)
 			end
 			
 		end
+		
+	-- Game mode selection used paddle movement keys
+	elseif gameState == 'start' and (key == 'up' or key == 'w') then
+		gameMode = 1
+	elseif gameState == 'start' and (key == 'down' or key == 's') then
+		gameMode = 2
+		
+	-- Return to game mode selection
+	elseif gameState == 'done' and key == 'space' then
+		gameMode = 1
+		player1Score = 0
+		player2Score = 0
+		gameState = 'start'
+		player1:reset()
+		player2:reset()
+		servingPlayer = 1
 	end
+	
+	
 end
 
 function love.resize(w, h)
@@ -161,6 +198,7 @@ function love.update(dt)
 			player2Score = player2Score + 1
 			
 			if player2Score == 10 then
+				ball:reset()
 				winningPlayer = 2
 				gameState = 'done'
 			else
@@ -175,6 +213,7 @@ function love.update(dt)
 			player1Score = player1Score + 1
 			
 			if player1Score == 10 then
+				ball:reset()
 				winningPlayer = 1
 				gameState = 'done'
 			else
@@ -184,23 +223,47 @@ function love.update(dt)
 		end
 	end
 	
-	-- Player 1 Movement
-	if love.keyboard.isDown('w') then
-		player1.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('s') then
-		player1.dy = PADDLE_SPEED
-	else
-		player1.dy = 0
+	-- Players will move only if not in start mode, as then the movement keys
+	-- are used for game mode selections
+	if gameState ~= 'start' then
+		-- Player 2 Movement
+		if gameMode == 2 then
+			-- Multiplayer
+			if love.keyboard.isDown('up') then
+				player2.dy = -PADDLE_SPEED
+			elseif love.keyboard.isDown('down') then
+				player2.dy = PADDLE_SPEED
+			else
+				player2.dy = 0
+			end
+		else
+			-- AI
+			-- If the ball is on the AI half of the board (speed 2x slower than player1)
+			if ball.x > VIRTUAL_WIDTH/2 then
+				
+				if ball.y < player2.y then
+					player2.dy = -PADDLE_SPEED/2
+				elseif ball.y > player2.y + player2.height then
+					player2.dy = PADDLE_SPEED/2
+				else
+					player2.dy = 0
+				end
+			else
+				player2.dy = 0
+			end
+			
+		end
+		
+		-- Player 1 Movement
+		if love.keyboard.isDown('w') then
+			player1.dy = -PADDLE_SPEED
+		elseif love.keyboard.isDown('s') then
+			player1.dy = PADDLE_SPEED
+		else	
+			player1.dy = 0
+		end
 	end
-	
-	-- Player 2 Movement
-	if love.keyboard.isDown('up') then
-		player2.dy = -PADDLE_SPEED
-	elseif love.keyboard.isDown('down') then
-		player2.dy = PADDLE_SPEED
-	else	
-		player2.dy = 0
-	end
+
 	
 	-- Ball Movement
 	if gameState == 'play' then
@@ -225,7 +288,8 @@ function love.draw()
 	if gameState == 'start' then
         love.graphics.setFont(smallFont)
         love.graphics.printf('Welcome to Pong!', 0, 10, VIRTUAL_WIDTH, 'center')
-        love.graphics.printf('Press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Select the game mode and press Enter to begin!', 0, 20, VIRTUAL_WIDTH, 'center')
+		displayGameModes()
 		
     elseif gameState == 'serve' then
         love.graphics.setFont(smallFont)
@@ -240,7 +304,7 @@ function love.draw()
         love.graphics.printf('Player ' .. tostring(winningPlayer) .. ' wins!',
             0, 10, VIRTUAL_WIDTH, 'center')
         love.graphics.setFont(smallFont)
-        love.graphics.printf('Press Enter to restart!', 0, 30, VIRTUAL_WIDTH, 'center')
+        love.graphics.printf('Press Enter to restart or Spacebar to reload the game!', 0, 30, VIRTUAL_WIDTH, 'center')
     end
 	
 	ball:render()
@@ -264,4 +328,19 @@ function displayScore()
         VIRTUAL_HEIGHT / 3)
     love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
         VIRTUAL_HEIGHT / 3)
+end
+
+function displayGameModes()
+	love.graphics.printf('Game mode:', VIRTUAL_WIDTH/7*3, 40, VIRTUAL_WIDTH, 'left')
+	if gameMode == 1 then
+		love.graphics.printf('-> 1 Player', VIRTUAL_WIDTH/7*3, 50, VIRTUAL_WIDTH, 'left')
+		love.graphics.setColor(105/255,105/255,105/255,1)
+		love.graphics.printf('   2 Players', VIRTUAL_WIDTH/7*3, 60, VIRTUAL_WIDTH, 'left')
+	else
+		love.graphics.printf('-> 2 Players', VIRTUAL_WIDTH/7*3, 60, VIRTUAL_WIDTH, 'left')
+		love.graphics.setColor(105/255,105/255,105/255,1)
+		love.graphics.printf('   1 Player', VIRTUAL_WIDTH/7*3, 50, VIRTUAL_WIDTH, 'left')	
+	end
+	-- Reset
+	love.graphics.setColor(1,1,1,1)
 end

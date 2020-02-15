@@ -1,5 +1,6 @@
 ScoreState = Class{__includes = BaseState}
 
+-- Cup image by: https://www.flaticon.com/authors/freepik
 local awardImages = {
     ['cup'] = love.graphics.newImage('cup.png'),
     ['blackCup'] = love.graphics.newImage('blackCup.png')

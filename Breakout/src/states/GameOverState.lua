@@ -5,7 +5,7 @@ function GameOverState:enter(params)
 end
 
 function GameOverState:enter(params)
-    self.score = 12000
+    self.score = params.score
     self.highScores = params.highScores
 end
 

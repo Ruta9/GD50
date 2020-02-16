@@ -1,13 +1,16 @@
 Ball = Class{}
 
-function Ball:init(skin)
+function Ball:init(skin, isMain)
     self.width = 8
     self.height = 8
 
     self.dy = 0
     self.dx = 0
+    self.x = 0
+    self.y = 0
 
     self.skin = skin
+    self.collision = true
 end
 
 function Ball:collides(target)

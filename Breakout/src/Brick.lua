@@ -34,14 +34,16 @@ paletteColors = {
     }
 }
 
-function Brick:init(x, y)
+function Brick:init(x, y, powerUp)
     self.tier = 0
     self.color = 1
+    self.isLocked = false
 
     self.x = x
     self.y = y
     self.width = 32
     self.height = 16
+    self.powerUp = powerUp
 
     -- render boolean, not a good practice for a bigger game, but a nice shortcut in this case.
     self.inPlay = true
@@ -68,51 +70,46 @@ end
 
 function Brick:hit()
 
-    -- Particles
-    self.psystem:setColors(
-        paletteColors[self.color].r/255,
-        paletteColors[self.color].g/255,
-        paletteColors[self.color].b/255,
-        55 * (self.tier + 1),
-        paletteColors[self.color].r/255,
-        paletteColors[self.color].g/255,
-        paletteColors[self.color].b/255,
-        0
-    )
-    self.psystem:emit(64)
+    if not self.isLocked then
+        -- Particles
+        self.psystem:setColors(
+            paletteColors[self.color].r/255,
+            paletteColors[self.color].g/255,
+            paletteColors[self.color].b/255,
+            55 * (self.tier + 1),
+            paletteColors[self.color].r/255,
+            paletteColors[self.color].g/255,
+            paletteColors[self.color].b/255,
+            0
+        )
+        self.psystem:emit(64)
 
-    gSounds['brick-hit-2']:stop()
-    gSounds['brick-hit-2']:play()
+        gSounds['brick-hit-2']:stop()
+        gSounds['brick-hit-2']:play()
 
-     -- if we're at a higher tier than the base, we need to go down a tier
-    -- if we're already at the lowest color, else just go down a color
-    if self.tier > 0 then
-        if self.color == 1 then
-            self.tier = self.tier - 1
-            self.color = 5
-        else
-            self.color = self.color - 1
-        end
-    else
-        -- if we're in the first tier and the base color, remove brick from play
+        -- if we're in the the base color, remove brick from play
         if self.color == 1 then
             self.inPlay = false
         else
             self.color = self.color - 1
         end
-    end
 
-    -- play a second layer sound if the brick is destroyed
-    if not self.inPlay then
-        gSounds['brick-hit-1']:stop()
-        gSounds['brick-hit-1']:play()
-    end
+
+        -- play a second layer sound if the brick is destroyed
+        if not self.inPlay then
+            gSounds['brick-hit-1']:stop()
+            gSounds['brick-hit-1']:play()
+        end
+    end 
 end
 
 function Brick:render()
     if self.inPlay then
-        love.graphics.draw(gTextures['main'], 
-        gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier], self.x, self.y)
+        if self.isLocked then
+            love.graphics.draw(gTextures['main'], gFrames['key-brick'][1], self.x, self.y)
+        else
+            love.graphics.draw(gTextures['main'], gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier], self.x, self.y)
+        end
     end
 end
 

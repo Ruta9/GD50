@@ -6,7 +6,7 @@ function ServeState:enter(params)
     self.health = params.health
     self.score = params.score
     self.level = params.level
-    self.ball = Ball(math.random(7))
+    self.ball = Ball(1, true)
     self.highScores = params.highScores
 end
 

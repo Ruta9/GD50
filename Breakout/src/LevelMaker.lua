@@ -20,18 +20,19 @@ function LevelMaker.createMap(level)
     local bricks = {}
 
     -- randomly choose the number of rows
-    local numRows = math.random(1, 4)
+    local numRows = math.random(2, 5)
 
     -- randomly choose the number of columns, ensuring odd
     local numCols = math.random(7, 13)
     numCols = numCols % 2 == 0 and (numCols + 1) or numCols
 
-    -- highest possible spawned brick color in this level; ensure we
-    -- don't go above 3
-    local highestTier = math.min(3, math.floor(level / 5))
-
     -- highest color of the highest tier
     local highestColor = math.min(5, level % 5 + 3)
+
+    -- PowerUps
+    local addBallsNumber = math.random(1, level + 1)
+    local removeBallCollision = math.random(1, level + 1)
+    local keyBrick = math.random(0, level)
 
     -- lay out bricks such that they touch each other and fill the space
     for y = 1, numRows do
@@ -44,8 +45,6 @@ function LevelMaker.createMap(level)
         -- choose two colors to alternate between
         local alternateColor1 = math.random(1, highestColor)
         local alternateColor2 = math.random(1, highestColor)
-        local alternateTier1 = math.random(0, highestTier)
-        local alternateTier2 = math.random(0, highestTier)
         
         -- used only when we want to skip a block, for skip pattern
         local skipFlag = math.random(2) == 1 and true or false
@@ -55,7 +54,6 @@ function LevelMaker.createMap(level)
 
         -- solid color we'll use if we're not skipping or alternating
         local solidColor = math.random(1, highestColor)
-        local solidTier = math.random(0, highestTier)
 
         for x = 1, numCols do
             -- if skipping is turned on and we're on a skip iteration...
@@ -78,24 +76,25 @@ function LevelMaker.createMap(level)
                 + (13 - numCols) * 16,  -- left-side padding for when there are fewer than 13 columns
                 
                 -- y-coordinate
-                y * 16                  -- just use y * 16, since we need top padding anyway
+                y * 16,                 -- just use y * 16, since we need top padding anyway,
+                nil                     -- powerUp
             )
 
             -- if we're alternating, figure out which color/tier we're on
             if alternatePattern and alternateFlag then
                 b.color = alternateColor1
-                b.tier = alternateTier1
+                b.tier = 0
                 alternateFlag = not alternateFlag
             else
                 b.color = alternateColor2
-                b.tier = alternateTier2
+                b.tier = 0
                 alternateFlag = not alternateFlag
             end
 
             -- if not alternating and we made it here, use the solid color/tier
             if not alternatePattern then
                 b.color = solidColor
-                b.tier = solidTier
+                b.tier = 0
             end 
 
             table.insert(bricks, b)
@@ -109,6 +108,35 @@ function LevelMaker.createMap(level)
     if #bricks == 0 then
         return self.createMap(level)
     else
+        
+        -- Add PowerUps
+        bricksNmb = #bricks
+        if bricksNmb < (addBallsNumber + removeBallCollision) then
+            addBallsNumber = math.floor(addBallsNumber/2)
+            removeBallCollision = math.floor(addBallsNumber/2)
+        end
+
+        while addBallsNumber > 0 do
+            i = math.random(1, bricksNmb)
+            if bricks[i].powerUp == nil then
+                bricks[i].powerUp = PowerUp('add-balls',bricks[i].x + bricks[i].width/2 - 8, bricks[i].y + bricks[i].height/2 - 8)
+                bricks[i].tier = 1
+                addBallsNumber = addBallsNumber - 1
+            end
+        end
+        while removeBallCollision > 0 do
+            i = math.random(1, bricksNmb)
+            if bricks[i].powerUp == nil then
+                bricks[i].powerUp = PowerUp('remove-ball-collision',bricks[i].x + bricks[i].width/2 - 8, bricks[i].y + bricks[i].height/2 - 8)
+                bricks[i].tier = 2
+                removeBallCollision = removeBallCollision - 1
+            end
+        end
+        while keyBrick > 0 do
+            i = math.random(1, bricksNmb)
+            bricks[i].isLocked = true
+            keyBrick = keyBrick - 1
+        end
         return bricks
     end
 end

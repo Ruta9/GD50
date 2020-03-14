@@ -3,13 +3,13 @@ BeginGameState = Class{__includes = BaseState}
 function BeginGameState:init()
     -- tween value (fade in)
     self.transitionAlpha = 1
-    self.board = Board(VIRTUAL_WIDTH - 272, 16)
     self.levelLabelY = -64 -- level label position
 end
 
 function BeginGameState:enter(params)
 
     self.level = params.level
+    self.board = Board(VIRTUAL_WIDTH - 272, 16, params.level)
     self.score = params.score or 0
 
     -- transition in

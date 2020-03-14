@@ -5,6 +5,8 @@ function PlayState:init()
     -- select position in grid
     self.boardHighlightX = 0
     self.boardHighlightY = 0
+    self.gameOver = false
+    self.gameOverTimer = 1
 
     self.score = 0
     self.timer = 60
@@ -19,6 +21,9 @@ function PlayState:init()
 
     Timer.every(1, function()
         self.timer = self.timer - 1
+        if self.gameOver then
+            self.gameOverTimer = self.gameOverTimer - 1
+        end
         -- warning sound
         if self.timer <= 5 then
             gSounds['clock']:play()
@@ -28,15 +33,18 @@ function PlayState:init()
     -- input will be paused while the tiles will be swapping
     self.canInput = true
 
+    self.swappedTiles = {}
+
+    self.shuffeling = false
 end
 
 function PlayState:enter(params)
     self.level = params.level
-    self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16)
+    self.board = params.board or Board(VIRTUAL_WIDTH - 272, 16, params.level)
     -- current score
     self.score = params.score or 0
     -- score to reach
-    self.scoreGoal = self.score + self.level * 1.25 * 200
+    self.scoreGoal = self.score + self.level * 1.25 * 1000
 end
 
 function PlayState:update(dt)
@@ -44,8 +52,18 @@ function PlayState:update(dt)
         love.event.quit()
     end
 
+    if self.gameOverTimer <= 0 then
+        Timer.clear()
+        gSounds['next-level']:play()
+        gStateMachine:change('begin-game', {
+            score = self.score,
+            level = self.level + 1
+        })
+    end
+
     -- timer runs out, game over
     if self.timer <= 0 then
+
         -- clear timers
         Timer.clear()
         
@@ -56,14 +74,9 @@ function PlayState:update(dt)
     end
 
     -- goal reached
-    if self.score >= self.scoreGoal then
-        Timer.clear()
-
-        gSounds['next-level']:play()
-        gStateMachine:change('begin-game', {
-            level = self.level + 1,
-            score = self.score
-        })
+    if self.score >= self.scoreGoal and not(self.gameOver) then
+        self.canInput = false
+        self.gameOver = true
     end
 
     if self.canInput then
@@ -117,11 +130,23 @@ function PlayState:update(dt)
 
                 self.board.tiles[newTile.gridY][newTile.gridX] = newTile
 
+                -- Save swapped tiles
+                table.insert(self.swappedTiles, self.highlightedTile)
+                table.insert(self.swappedTiles, newTile)
+
                 -- tween coordinates between the two so they swap
                 Timer.tween(0.1, {
                     [self.highlightedTile] = {x = newTile.x, y = newTile.y},
                     [newTile] = {x = self.highlightedTile.x, y = self.highlightedTile.y}
-                }):finish(function() self:calculateMatches() end)
+                }):finish(function() 
+                    self.highlightedTile = nil
+                    if not(self.board:calculateMatches()) then
+                        self:revertLatestSwap()
+                    else
+                        self:calculateMatches() 
+                        self.swappedTiles = {}
+                    end
+                end)
 
             end
         end
@@ -131,8 +156,30 @@ function PlayState:update(dt)
     Timer.update(dt)
 end
 
+function PlayState:revertLatestSwap()
+    -- swap their gridX, gridY
+    local tempGridX = self.swappedTiles[1].gridX
+    local tempGridY = self.swappedTiles[1].gridY
+    self.swappedTiles[1].gridX = self.swappedTiles[2].gridX
+    self.swappedTiles[1].gridY = self.swappedTiles[2].gridY
+    self.swappedTiles[2].gridX = tempGridX
+    self.swappedTiles[2].gridY = tempGridY
+
+    -- swap tiles in the tiles table
+    self.board.tiles[self.swappedTiles[2].gridY][self.swappedTiles[2].gridX] = self.swappedTiles[2]
+    self.board.tiles[self.swappedTiles[1].gridY][self.swappedTiles[1].gridX] = self.swappedTiles[1]
+    
+    -- tween coordinates between the two so they swap
+    Timer.tween(0.1, {
+        [self.swappedTiles[1]] = {x = self.swappedTiles[2].x, y = self.swappedTiles[2].y},
+        [self.swappedTiles[2]] = {x = self.swappedTiles[1].x, y = self.swappedTiles[1].y}
+    }):finish(function() self.canInput = true end)
+
+    -- clear LatestSwap Table
+    self.swappedTiles = {}
+end
+
 function PlayState:calculateMatches()
-    self.highlightedTile = nil
 
     -- check for matches
     local matches = self.board:calculateMatches()
@@ -144,6 +191,10 @@ function PlayState:calculateMatches()
         -- add score for each match
         for k, match in pairs(matches) do
             self.score = self.score + #match * 50
+            self.timer = self.timer + #match
+            for i, tile in pairs(match) do
+                self.score = self.score + 10 * tile.variety
+            end
         end
 
         -- remove any tiles that matched from the board, making empty spaces
@@ -157,9 +208,64 @@ function PlayState:calculateMatches()
     -- if no matches, we can continue playing
     else
         self.canInput = true
+        if not(self.board:calculatePotentialMatches()) then
+            self:shuffle()
+        end
     end
 end
 
+function PlayState:shuffle()
+    self.shuffeling = true
+    self.canInput = false
+    local alreadyShuffled = {}
+    local shuffledBoard = {}
+    for y = 1, 8 do
+        local tilesRow = {}
+        for x = 1, 8 do
+            local switched = false
+            while not(switched) do
+                local tempX, tempY = math.random(8), math.random(8)
+                local str = tostring(tempY) .. tostring(tempX)
+                for j, coordinates in pairs(alreadyShuffled) do
+                    if coordinates[1] == tempY and coordinates[2] == tempX then
+                        -- coordinates are already populated, go back
+                        goto cont
+                    end
+                end
+                -- coordinates are unique, insert as an already used pair + insert into a new tiles' board row
+                table.insert(alreadyShuffled, {tempY, tempX})
+                table.insert(tilesRow, self.board.tiles[tempY][tempX])
+                switched = true
+                ::cont::
+            end
+        end
+        table.insert(shuffledBoard, tilesRow)
+    end
+
+    self.board.tiles = shuffledBoard
+
+    -- tween
+    local tweens = {}
+    for y = 1, 8 do 
+        for x = 1, 8 do
+            print(tostring(y) .. tostring(x))
+            shuffledBoard[y][x].gridX = x
+            shuffledBoard[y][x].gridY = y
+            tweens[shuffledBoard[y][x]] = {
+                x = (shuffledBoard[y][x].gridX - 1) * 32, 
+                y = (shuffledBoard[y][x].gridY - 1) * 32
+            }
+        end
+    end
+
+    Timer.tween(1, tweens):finish(function()
+        self.shuffeling = false
+        self.canInput = true 
+        if not(self.board:calculatePotentialMatches()) then
+            self:shuffle()
+        end
+    end)
+end
 
 function PlayState:render()
 

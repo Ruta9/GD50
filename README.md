@@ -5,7 +5,8 @@ Games created:
 1. [Pong](https://github.com/Ruta9/GD50/blob/master/README.md#1-pong)
 2. [Flappy Bird](https://github.com/Ruta9/GD50/blob/master/README.md#2-flappy-bird)
 3. [Breakout](https://github.com/Ruta9/GD50/blob/master/README.md#3-breakout)
-4. [Match-3](https://github.com/Ruta9/GD50/blob/master/README.md#3-match-3)
+4. [Match-3](https://github.com/Ruta9/GD50/blob/master/README.md#4-match-3)
+5. [Mario](https://github.com/Ruta9/GD50/blob/master/README.md#5-mario)
 
 ## Lua + Love2D
 
@@ -60,7 +61,7 @@ Assignment:
 2. Paddle should shrink if the player loses a heart.
 3. Add a locked brick and a key powerup. The locked Brick should not be breakable by the ball normally, unless they have the key Powerup.
 
-#### 3. Match-3
+#### 4. Match-3
 
 <img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Match3_3.PNG" width="600">
 
@@ -78,3 +79,22 @@ Assignment:
 4. Only allow swapping when it results in a match. 
 5. If there are no matches available to perform, reset the board
 6. (Optional) Implement matching using the mouse. (Hint: you’ll need push:toGame(x,y); see the push library’s documentation here for details!
+
+#### 5. Mario
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Mario3.PNG" width="600">
+
+Covered topics:
+- 2D Animation
+- Tile maps
+- Procedural Level Generation
+- Basic AI
+- Consumables, Game objects
+- Player-focused Camera 
+
+Assignment:
+1. Program it such that when the player is dropped into the level, they’re always done so above solid ground
+2. In LevelMaker.lua, generate a random-colored key and lock block (taken from keys_and_locks.png in the graphics folder of the distro). The key should unlock the block when the player collides with it, triggering the block to disappear.
+3. Once the lock has disappeared, trigger a goal post to spawn at the end of the level.
+4. When the player touches this goal post, we should regenerate the level, spawn the player at the beginning of it again (this can all be done via just reloading PlayState), and make it a little longer than it was before
+

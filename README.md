@@ -82,7 +82,7 @@ Assignment:
 
 #### 5. Mario
 
-<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Mario3.PNG" width="600">
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Mario3.png" width="600">
 
 Covered topics:
 - 2D Animation

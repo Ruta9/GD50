@@ -210,6 +210,7 @@ function PlayState:calculateMatches()
         self.canInput = true
         if not(self.board:calculatePotentialMatches()) then
             self:shuffle()
+            self:calculateMatches()
         end
     end
 end

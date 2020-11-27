@@ -99,7 +99,7 @@ Assignment:
 3. Once the lock has disappeared, trigger a goal post to spawn at the end of the level.
 4. When the player touches this goal post, we should regenerate the level, spawn the player at the beginning of it again (this can all be done via just reloading PlayState), and make it a little longer than it was before
 
-#### 5. Legend of Zelda
+#### 6. Legend of Zelda
 
 <img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/legend-of-zelda-1.png" width="600">
 

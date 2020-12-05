@@ -119,7 +119,7 @@ Assignment:
 1. Make some enemies drop hearts that would restore 2 health.
 2. Spawn some pots in dungeon rooms, allow the player to lift it. Lifting and pot-carrying animations should be added. Pots can be used to damage the enemies by throwing them. They should disappear if they hit a wall, an enemy or traveled more than 4 tiles.
 
-#### 6. Angry Birds
+#### 7. Angry Birds
 
 <img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Angry2.png" width="600">
 

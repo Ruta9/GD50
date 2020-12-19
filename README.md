@@ -1,7 +1,7 @@
 # GD50
 A repository to hold projects created by following the Harvard Game Development online course (lua + Love2D, Unity)
 
-Author of the games and their code is Colton Ogden, cogden@cs50.harvard.edu.
+Author of the games and their code is Colton Ogden, the lecturer of GD50 Hardvard course.
 Assignments and various customizations are made by the author of this repository.
 
 Games created:
@@ -12,6 +12,7 @@ Games created:
 5. [Mario](https://github.com/Ruta9/GD50/blob/master/README.md#5-mario)
 6. [Legend of Zelda](https://github.com/Ruta9/GD50/blob/master/README.md#6-legend-of-zelda)
 7. [Angry Birds](https://github.com/Ruta9/GD50/blob/master/README.md#7-angry-birds)
+8. [Pokemon](https://github.com/Ruta9/GD50/blob/master/README.md#8-pokemon)
 
 ## Lua + Love2D
 
@@ -129,6 +130,19 @@ Covered topics:
 
 Assignment:
 1. Implement it such that when the player presses the space bar after they’ve launched an Alien (and it hasn’t hit anything yet), split the Alien into three Aliens that all behave just like the base Alien. The original Alien should stay the same, while the top Alien should go higher, the bottom one lower and their angle should be changed accordingly.
+
+#### 8. Pokemon
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Pokemon2.png" width="600">
+
+Covered topics:
+- State Stacks
+- Turn-Based Systems
+- GUIs
+- RPG Mechanics
+
+Assignment:
+1. Implement a Menu that appears during the player Pokémon’s level up that shows, for each stat, ‘X + Y = Z’ where X is the starting stat, Y is the amount it’s increased for this level, and Z is the resultant sum. This Menu should appear right after the “Level Up” dialogue that appears at the end of a victory where the player has indeed leveled up.
 
 
 

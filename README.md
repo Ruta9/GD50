@@ -17,7 +17,7 @@ Assignments and various customizations are made by the author of this repository
 8. [Pokemon](#8-pokemon)
 
 ###### Unity:
-8. [Helicopter](#1-helicopter)
+9. [Helicopter](#9-helicopter)
 
 ## Lua + Love2D
 
@@ -154,7 +154,7 @@ Assignment:
 
 Games created using Unity engine.
 
-#### 1. Helicopter
+#### 9. Helicopter
 
 <img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Helicopter1.png" width="600">
 

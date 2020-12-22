@@ -4,15 +4,20 @@ A repository to hold projects created by following the Harvard Game Development 
 Author of the games and their code is Colton Ogden, the lecturer of GD50 Hardvard course.
 Assignments and various customizations are made by the author of this repository.
 
-Games created:
-1. [Pong](https://github.com/Ruta9/GD50/blob/master/README.md#1-pong)
-2. [Flappy Bird](https://github.com/Ruta9/GD50/blob/master/README.md#2-flappy-bird)
-3. [Breakout](https://github.com/Ruta9/GD50/blob/master/README.md#3-breakout)
-4. [Match-3](https://github.com/Ruta9/GD50/blob/master/README.md#4-match-3)
-5. [Mario](https://github.com/Ruta9/GD50/blob/master/README.md#5-mario)
-6. [Legend of Zelda](https://github.com/Ruta9/GD50/blob/master/README.md#6-legend-of-zelda)
-7. [Angry Birds](https://github.com/Ruta9/GD50/blob/master/README.md#7-angry-birds)
-8. [Pokemon](https://github.com/Ruta9/GD50/blob/master/README.md#8-pokemon)
+##### Games created:
+
+###### Lua + Love2D:
+1. [Pong](#1-pong)
+2. [Flappy Bird](#2-flappy-bird)
+3. [Breakout](#3-breakout)
+4. [Match-3](#4-match-3)
+5. [Mario](#5-mario)
+6. [Legend of Zelda](#6-legend-of-zelda)
+7. [Angry Birds](#7-angry-birds)
+8. [Pokemon](#8-pokemon)
+
+###### Unity:
+8. [Helicopter](#1-helicopter)
 
 ## Lua + Love2D
 
@@ -143,6 +148,30 @@ Covered topics:
 
 Assignment:
 1. Implement a Menu that appears during the player Pokémon’s level up that shows, for each stat, ‘X + Y = Z’ where X is the starting stat, Y is the amount it’s increased for this level, and Z is the resultant sum. This Menu should appear right after the “Level Up” dialogue that appears at the end of a victory where the player has indeed leveled up.
+
+
+## Unity
+
+Games created using Unity engine.
+
+#### 1. Helicopter
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Helicopter1.png" width="600">
+
+Covered topics:
+- Unity
+- C#
+- Blender
+- Components
+- Colliders and Triggers
+- Prefabs and Spawning
+- Texture Scrolling
+- Audio
+
+
+Assignment:
+1. Add Gems to the game that spawn in much the same way as Coins, though more rarely so. Gems should be worth 5 coins when collected and despawn when off the left edge of the screen.
+2. Fix the bug whereby the scroll speed of planes, coins, and buildings doesn’t reset when the game is restarted via the space bar.
 
 
 

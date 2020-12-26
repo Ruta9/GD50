@@ -176,7 +176,7 @@ Assignment:
 
 #### 10. Dreadhalls
 
-<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Dreadhalls1.png" width="600">
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Dreadhalls4.png" width="600">
 
 Covered topics:
 - Texturing

@@ -18,6 +18,7 @@ Assignments and various customizations are made by the author of this repository
 
 ###### Unity:
 9. [Helicopter](#9-helicopter)
+10. [Dreadhalls](#10-dreadhalls)
 
 ## Lua + Love2D
 
@@ -172,6 +173,24 @@ Covered topics:
 Assignment:
 1. Add Gems to the game that spawn in much the same way as Coins, though more rarely so. Gems should be worth 5 coins when collected and despawn when off the left edge of the screen.
 2. Fix the bug whereby the scroll speed of planes, coins, and buildings doesn’t reset when the game is restarted via the space bar.
+
+#### 10. Dreadhalls
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Dreadhalls1.png" width="600">
+
+Covered topics:
+- Texturing
+- Materials and Lighting
+- 3D Maze Generation
+- First-Person Controllers
+- Multiple Scenes
+- Fog
+- UI Components and Unity2D
+
+Assignment:
+1. Create gaps in the floor that the player can fall through.
+2. When the player falls through the hole (approximately two blocks below), transition to a screen with "Game Over" text. Pressing "Enter" here should loop back to the Title Scene.
+3. Add a "Text" object to the Play Scene that keeps track of how many levels the player has navigated through.
 
 
 

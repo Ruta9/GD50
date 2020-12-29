@@ -19,6 +19,7 @@ Assignments and various customizations are made by the author of this repository
 ###### Unity:
 9. [Helicopter](#9-helicopter)
 10. [Dreadhalls](#10-dreadhalls)
+11. [Portal](#11-portal)
 
 ## Lua + Love2D
 
@@ -192,5 +193,30 @@ Assignment:
 2. When the player falls through the hole (approximately two blocks below), transition to a screen with "Game Over" text. Pressing "Enter" here should loop back to the Title Scene.
 3. Add a "Text" object to the Play Scene that keeps track of how many levels the player has navigated through.
 
+#### 11. Portal
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/Portal1.png" width="600">
+
+Covered topics:
+- Holding a Weapon
+- Raycasting
+- RenderTexture
+- Texture Masking
+- Decals
+- Teleporting
+- ProBuilder and ProGrids
+
+Assignment:
+1. Create your own level using ProBuilder! 
+	- Level should be of reasonable complexity and include at least two different textures/materials (not including the default). 
+	- Level must include an FPSController.
+	- There must be at least one jumping puzzle for the player.
+	- At the end of the level, there must be a collider with a trigger that makes "Level Complete" pop up on the screen.
+
+###### Assignment:
+
+<img src="https://github.com/Ruta9/GD50/blob/master/Screenshots/MyLevel3.png" width="600">
+
+A recorded video can be found [here](https://github.com/Ruta9/GD50/blob/master/MyLevelVideo)
 
 
